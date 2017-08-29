@@ -3,6 +3,7 @@
 
 import random
 
+
 #user can specify size of the board
 def boardSize(size):
     board = [[' '] * size for _ in range(size)]
@@ -17,14 +18,20 @@ def realBoard(board):
         for j in range(len(board)):
             tens = str(board[i][j])
             row += tens
-            row += ' '
+            row += '  '
         print row
     print '\n'
 
 def playerBoard(pboard, size):
-    letters = ('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H')
-    print 'the board so far: \n'
-    print '    1    2    3    4    5    6    7    8'
+    letters = ('A', 'B', 'C', 'D',
+               'E', 'F', 'G', 'H',
+               'I', 'J', 'K', 'L')
+    #print 'the board so far: \n'
+    numString = ''
+    for i in range(size):
+        numString += '    '
+        numString += str(i + 1)
+    print numString
     for i in range(size):
         print '{} {}'.format(letters[i], pboard[i])
  
@@ -43,8 +50,10 @@ def populate(board, b):
                     if b == 0:
                         print ('bombs have been added.'+
                         'it did so in {} iterations\n'.format(iterations))
+
                         return
-                
+
+'''               
 # there has to be a better way to do this.....
 def getNums(board):
     length = len(board)
@@ -67,7 +76,7 @@ def getNums(board):
                 for l in range(-1, 2):
                     try:
                         if board[i + 1][j + l] == 'b':
-                            if i + 1 == -1 or j + 1 == -1:
+                            if j + 1 == -1 or j + l == -1:
                                 pass
                             else:
                                 numNear += 1
@@ -89,26 +98,64 @@ def getNums(board):
                 except IndexError:
                         pass
                 board[i][j] = numNear
+'''
+def getNeighbors(x, y, maxLen):
+    neighbors = []
+    for i in range(x-1, x+2):
+        for j in range(y-1, y+2):
+            if (j != -1 and i != -1 and
+                j < maxLen and i < maxLen and
+                ((i,j) != (x,y))):
+                
+                neighbors.append((i,j))
+    return(neighbors)
 
+def getIndexes(arr, tups):
+    indexes = []
+    for i in tups:
+        indexes.append(arr[i[0]][i[1]])
+    return indexes
+
+
+def getNums(arr):
+    length = len(arr)
+    test = []
+    numNear = 0
+    for i in range(length):
+        for j in range(length):
+            if arr[i][j] != 'b':
+                numNear = 0
+                neighbors = getNeighbors(i, j, length)
+                indexes = getIndexes(arr, neighbors)
+                for k in indexes:
+                    if k == 'b':
+                        numNear += 1
+                arr[i][j] = numNear
+    #print (arr)
+                
 def makeMove(board, pboard, space):
     letterDict = {'A': 0, 'B': 1, 'C': 2, 'D': 3,
-                  'E': 4, 'F': 5, 'G': 6, 'H': 7}
-    tens = list(space)
-    row = int(letterDict.get(tens[0]))
-    col = int(tens[1]) - 1
+                  'E': 4, 'F': 5, 'G': 6, 'H': 7,
+                  'I': 8, 'J': 9, 'K': 10,'L': 11}
+  
+    parsedSpace = list(space)
+    row = int(letterDict.get(parsedSpace[0]))
+    col = int(parsedSpace[1]) - 1
     pboard[row][col] = str(board[row][col])
+    
+    
               
             
 def main():
     
-    size = 8
+    #size = int(raw_input('what will the size of the board be?'))
+    size = 3
     tens = boardSize(size)
-    pboard = [[' '] * size for _ in range(size)]
+    pboard = boardSize(size)
 
-    populate(tens, 15)
+    populate(tens, 4)
     getNums(tens)
     realBoard(tens)
-    makeMove(tens, pboard, 'C5')
+    makeMove(tens, pboard, 'C2')
     playerBoard(pboard, size)
-
 main()
