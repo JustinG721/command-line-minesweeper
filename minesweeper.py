@@ -50,55 +50,8 @@ def populate(board, b):
                     if b == 0:
                         print ('bombs have been added.'+
                         'it did so in {} iterations\n'.format(iterations))
-
                         return
 
-'''               
-# there has to be a better way to do this.....
-def getNums(board):
-    length = len(board)
-    for i in range(length):
-        for j in range(length):
-            numNear = 0
-            # if the space isn't a bomb
-            if board[i][j] != 'b':
-                #check if all the spaces above are a bomb.
-                for k in range(-1, 2):
-                    try:
-                        if board[i - 1][j + k] == 'b':
-                            if i - 1 == -1 or (j + k) == -1:
-                                pass
-                            else:
-                                numNear += 1
-                    except IndexError:
-                        pass
-                #check if all the spaces below are a bomb
-                for l in range(-1, 2):
-                    try:
-                        if board[i + 1][j + l] == 'b':
-                            if j + 1 == -1 or j + l == -1:
-                                pass
-                            else:
-                                numNear += 1
-                    except IndexError:
-                        pass
-                #and the left space
-                try: 
-                    if board[i][j - 1] == 'b':
-                        if j - 1 == -1 or i == -1:
-                            pass
-                        else:
-                            numNear += 1
-                except IndexError:
-                        pass
-                #and the right
-                try:
-                    if board[i][j + 1] == 'b':
-                        numNear += 1
-                except IndexError:
-                        pass
-                board[i][j] = numNear
-'''
 def getNeighbors(x, y, maxLen):
     neighbors = []
     for i in range(x-1, x+2):
@@ -158,4 +111,6 @@ def main():
     realBoard(tens)
     makeMove(tens, pboard, 'C2')
     playerBoard(pboard, size)
+
+    
 main()
