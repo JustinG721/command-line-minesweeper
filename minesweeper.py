@@ -3,6 +3,8 @@
 
 import random
 
+size = 8
+
 
 #user can specify size of the board
 def boardSize(size):
@@ -84,33 +86,39 @@ def getNums(arr):
                     if k == 'b':
                         numNear += 1
                 arr[i][j] = numNear
-    #print (arr)
                 
-def makeMove(board, pboard, space):
+def makeMove(board, pboard, coords):
+    row = coords[0]
+    col = coords[1]
+    pboard[row][col] = str(board[row][col])
+    if str(board[row][col]) == '0':
+        #print getNeighbors(row, col, size)
+        for r, c in getNeighbors(row, col, size):
+            #print r, c
+            makeMove(board, pboard, (r, c))
+    
+
+def createChoice(space):
     letterDict = {'A': 0, 'B': 1, 'C': 2, 'D': 3,
                   'E': 4, 'F': 5, 'G': 6, 'H': 7,
                   'I': 8, 'J': 9, 'K': 10,'L': 11}
-  
     parsedSpace = list(space)
     row = int(letterDict.get(parsedSpace[0]))
-    col = int(parsedSpace[1]) - 1
-    pboard[row][col] = str(board[row][col])
-    
-    
-              
+    col = col = int(parsedSpace[1]) - 1
+    return (row, col)
             
 def main():
-    
-    #size = int(raw_input('what will the size of the board be?'))
-    size = 3
-    tens = boardSize(size)
-    pboard = boardSize(size)
+        #size = int(raw_input('what will the size of the board be?'))
+        #size = 8
+        tens = boardSize(size)
+        numBombs = (size ** 2) / 4
+        pboard = boardSize(size)
 
-    populate(tens, 4)
-    getNums(tens)
-    realBoard(tens)
-    makeMove(tens, pboard, 'C2')
-    playerBoard(pboard, size)
-
-    
+        populate(tens, 1)
+        getNums(tens)
+        realBoard(tens)
+        chosenTile = createChoice('A4')
+        print chosenTile
+        makeMove(tens, pboard, chosenTile)
+        playerBoard(pboard, size)
 main()
