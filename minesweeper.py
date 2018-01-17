@@ -1,11 +1,8 @@
- #simple text minesweeper
+#simple text minesweeper
 #Justin Grant
 
 import random
 import sys
-
-#size = 8
-#sys.setrecursionlimit(5000)
 
 
 #user can specify size of the board
@@ -14,18 +11,18 @@ def boardSize(size):
     return board
 
 
-# board that the player will not see
-#This board has all the info from the start.
-def realBoard(board):
+#board that the player will not see
+#this board has all the info from the start.
+def showRealBoard(board):
     for i in range(len(board)):
         row = ''
         for j in range(len(board)):
             tens = str(board[i][j])
             row += tens + '  '
-        print row
+        print (row)
     print '\n'
 
-def playerBoard(pboard, size):
+def showPlayerBoard(pboard, size):
     letters = (map(chr, range(65,91)))
     numString = '    ' + '    '.join(str(i + 1) for i in range(size))
     print numString
@@ -46,7 +43,7 @@ def populate(board, b):
                     b -= 1
                     if b == 0:
                         print ('bombs have been added.'+
-                        ' function did so in {} iterations\n'.format(iterations))
+                        ' Loop ran {} times\n'.format(iterations))
                         return
 
 def getNeighbors(x, y, maxLen):
@@ -69,7 +66,6 @@ def getIndexes(arr, tups):
 
 def getNums(arr):
     length = len(arr)
-    test = []
     numNear = 0
     for i in range(length):
         for j in range(length):
@@ -83,36 +79,33 @@ def getNums(arr):
                 arr[i][j] = numNear
                 
 def makeMove(board, pboard, coords):
-    row = coords[0]
-    col = coords[1]
-    pboard[row][col] = str(board[row][col])
-    if str(board[row][col]) != '0':
+    row, col = coords[0], coords[1]
+    if pboard[row][col] != ' ':
         return
-    else:
+    pboard[row][col] = str(board[row][col])
+    if str(board[row][col]) == '0':
         for r, c in getNeighbors(row, col, len(pboard)):
-            return makeMove(board, pboard, (r, c))
+            makeMove(board, pboard, (r, c))
+
     
 
 def createChoice(space):
     letterDict = dict(zip(map(chr, range(65,91)), range(26)))
-    parsedSpace = list(space)
-    row = int(letterDict.get(parsedSpace[0]))
-    col = int((''.join(parsedSpace[1:]))) - 1
+    row = int(letterDict.get(space[0]))
+    col = int(''.join(space[1:])) - 1
     return (row, col)
             
 def main():
     #size = int(raw_input('what will the size of the board be?'))
-    size = 14
-    tens = boardSize(size)
-    numBombs = (size ** 2) / 4
-    pboard = boardSize(size)
+    size = 8
+    backendBoard, pboard = boardSize(size), boardSize(size)
+    numBombs = (size ** 2) / 8
 
-    populate(tens, 1)
-    getNums(tens)
-    realBoard(tens)
-    chosenTile = createChoice('N13')
-    makeMove(tens, pboard, chosenTile)
-    playerBoard(pboard, size)
-
+    populate(backendBoard, numBombs)
+    getNums(backendBoard)
+    showRealBoard(backendBoard)
+    chosenTile = createChoice('H8')
+    makeMove(backendBoard, pboard, chosenTile)
+    showPlayerBoard(pboard, size)
     
 main()
