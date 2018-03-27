@@ -1,35 +1,36 @@
-#simple text minesweeper
-#Justin Grant
+# simple text minesweeper
+# Justin Grant
 
 import random
-import sys
 
 
-#user can specify size of the board
+# user can specify size of the board
 def boardSize(size):
     board = [[' '] * size for _ in range(size)]
     return board
 
 
-#board that the player will not see
-#this board has all the info from the start.
+# board that the player will not see
+# this board has all the info from the start.
 def showRealBoard(board):
     for i in range(len(board)):
         row = ''
         for j in range(len(board)):
             tens = str(board[i][j])
             row += tens + '  '
-        print (row)
-    print '\n'
+        print(row)
+    print('\n')
+
 
 def showPlayerBoard(pboard, size):
-    letters = (map(chr, range(65,91)))
+    letters = list((map(chr, range(65, 91))))
     numString = '    ' + '    '.join(str(i + 1) for i in range(size))
-    print numString
+    print(numString)
     for i in range(size):
-        print '{} {}'.format(letters[i], pboard[i])
- 
-#adds the bombs to the real board
+        print('{} {}'.format(letters[i], pboard[i]))
+
+
+# adds the bombs to the real board
 def populate(board, b):
     iterations = 0
     length = len(board)
@@ -42,20 +43,22 @@ def populate(board, b):
                     board[i][j] = 'b'
                     b -= 1
                     if b == 0:
-                        print ('bombs have been added.'+
-                        ' Loop ran {} times\n'.format(iterations))
+                        print('bombs have been added.',
+                              ' Loop ran {} times\n'.format(iterations))
                         return
+
 
 def getNeighbors(x, y, maxLen):
     neighbors = []
     for i in range(x-1, x+2):
         for j in range(y-1, y+2):
-            if (j != -1 and i != -1 and
-                j < maxLen and i < maxLen and
-                ((i,j) != (x,y))):
-                
-                neighbors.append((i,j))
+            if (j != -1 and i != -1
+                    and j < maxLen and i < maxLen
+                    and ((i, j) != (x, y))):
+
+                neighbors.append((i, j))
     return(neighbors)
+
 
 def getIndexes(arr, tups):
     indexes = []
@@ -77,7 +80,8 @@ def getNums(arr):
                     if k == 'b':
                         numNear += 1
                 arr[i][j] = numNear
-                
+
+
 def makeMove(board, pboard, coords):
     row, col = coords[0], coords[1]
     if pboard[row][col] != ' ':
@@ -87,16 +91,16 @@ def makeMove(board, pboard, coords):
         for r, c in getNeighbors(row, col, len(pboard)):
             makeMove(board, pboard, (r, c))
 
-    
 
 def createChoice(space):
-    letterDict = dict(zip(map(chr, range(65,91)), range(26)))
+    letterDict = dict(zip(map(chr, range(65, 91)), range(26)))
     row = int(letterDict.get(space[0]))
     col = int(''.join(space[1:])) - 1
     return (row, col)
-            
+
+
 def main():
-    #size = int(raw_input('what will the size of the board be?'))
+    # size = int(raw_input('what will the size of the board be?'))
     size = 8
     backendBoard, pboard = boardSize(size), boardSize(size)
     numBombs = (size ** 2) / 8
@@ -107,5 +111,6 @@ def main():
     chosenTile = createChoice('H8')
     makeMove(backendBoard, pboard, chosenTile)
     showPlayerBoard(pboard, size)
-    
+
+
 main()
